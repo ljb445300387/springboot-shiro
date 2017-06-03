@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.ouyang.mapper.UserMapper">
+ 
+  <select id="getUserInfo" resultType="com.test.ouyang.vo.User">
+    select name, age,password from user;
+  </select>
+  <select id="checkUserByAccount" resultType="com.test.ouyang.vo.SystemUser" parameterType="String">
+  	select * from springboot_user where account=#{account}
+  </select>
+ <select id="findPermissionByUserInfo" resultType="String" parameterType="map">
+ 	SELECT 	    SM.CODE	FROM	    SPRINGBOOT_USER SU	LEFT JOIN	    SPRINGBOOT_USER_ROLE SUR	ON	    SU.ID=SUR.USERID
+ 	LEFT JOIN	    SPRINGBOOT_ROLE_PERMISSION SRP	ON	    SUR.ROLEID=SRP.ROLEID	LEFT JOIN	    SPRINGBOOT_PERMISSION_MENU SPM	ON	   
+	  SRP.PERMISSIONID=SPM.PERMISSIONID	LEFT JOIN	    SPRINGBOOT_MENU SM	ON	    SPM.MENUID=SM.ID	
+	  WHERE 1=1
+	  <if test="isWork!=null and isWork!=''">
+	  	AND SUR.ISWORK=#{isWork,jdbcType=VARCHAR}
+	  	AND SRP.ISWORK=#{isWork,jdbcType=VARCHAR}
+	  	AND SPM.ISWORK=#{isWork,jdbcType=VARCHAR}
+	  	AND SM.ENABLE=#{isWork,jdbcType=VARCHAR}
+	  </if>
+	  AND SU.Id=#{userId,jdbcType=VARCHAR}
+ </select>
+</mapper>

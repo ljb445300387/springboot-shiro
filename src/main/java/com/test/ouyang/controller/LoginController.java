@@ -1,9 +1,5 @@
 package com.test.ouyang.controller;
 
-import java.util.logging.Logger;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -13,9 +9,8 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,11 +18,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.test.ouyang.service.UserService;
 import com.test.ouyang.vo.SystemUser;
 
-@SpringBootApplication
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 public class LoginController {
 
-	private static Logger log = Logger.getLogger(LoginController.class.getName());
 	@Autowired
 	UserService userService;
 
@@ -44,30 +40,30 @@ public class LoginController {
 
 	@RequestMapping("/login")
 	@ResponseBody
-	public String login(@RequestParam(value = "account") String account,
-			@RequestParam(value = "password") String password) {
+	public String login(//
+			@RequestParam(value = "username") String username, @RequestParam(value = "password") String password) {
 		Subject subject = SecurityUtils.getSubject();
-		log.info("account:" + account + "\t password:" + password);
 		String msg = "";
-		if (!account.equals(subject.getPrincipal()) || !subject.isAuthenticated()) {
-			UsernamePasswordToken token = new UsernamePasswordToken(account, password);
+		if (!username.equals(subject.getPrincipal()) || !subject.isAuthenticated()) {
+			UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 			try {
 				subject.login(token);
 				Session session = subject.getSession(false);
-				SystemUser user = userService.checkUserByAccount(account);
+				SystemUser user = userService.getUserInfo(username);
 				session.setAttribute("user", user);
 				msg = "ok";
-			} catch (UnknownAccountException uae) {
-				log.erro
+			} catch (UnknownAccountException e) {
+				log.error("", e);
 				//用户名不存在
 				msg = "用户名不存在!";
-			} catch (IncorrectCredentialsException ice) {
+			} catch (IncorrectCredentialsException e) {
+				log.error("", e);
 				//密码错误
 				msg = "用户名或密码错误!";
-			} catch (LockedAccountException lae) {
+			} catch (LockedAccountException e) {
 				//账户被锁定
 				msg = "账户被锁定";
-			} catch (ExcessiveAttemptsException eae) {
+			} catch (ExcessiveAttemptsException e) {
 				//登录失败次数超过系统最大次数,请稍后重试
 				msg = "登录失败次数超过系统最大次数,请稍后重试!";
 			} catch (Exception e) {
@@ -87,7 +83,7 @@ public class LoginController {
 	}
 
 	@RequestMapping("logout")
-	public String logout() {
+	public @ResponseBody String logout() {
 		Subject subject = SecurityUtils.getSubject();
 		subject.logout();
 		log.info("退出成功，已销毁用户信息，需要重新登录");

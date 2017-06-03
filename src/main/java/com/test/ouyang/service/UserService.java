@@ -1,31 +1,31 @@
 package com.test.ouyang.service;
 
-import java.util.List;
-import java.util.Map;
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.test.ouyang.mapper.UserMapper;
 import com.test.ouyang.vo.SystemUser;
-import com.test.ouyang.vo.User;
 
 @Service
-public class UserService implements UserMapper{
-	
+public class UserService {
+
 	@Autowired
 	private UserMapper userMapper;
-	
-	public User getUserInfo() {
-		return userMapper.getUserInfo();
+
+	@PostConstruct
+	public void init() {
+		SystemUser s = new SystemUser();
+		s.setAccount("ljb");
+		s.setName("ljb");
+		s.setPasswd("b116e1f8b82ba5091cc277023393d702");
+		s.setSalt("9ed7248fb51285d294bad05395b762c2");
+		userMapper.save(s);
 	}
 
-	public SystemUser checkUserByAccount(String account) {
-		return userMapper.checkUserByAccount(account);
-	}
-
-	public List findPermissionByUserInfo(Map userInfo) {
-		return userMapper.findPermissionByUserInfo(userInfo);
+	public SystemUser getUserInfo(String username) {
+		return userMapper.findOneByname(username);
 	}
 
 }
