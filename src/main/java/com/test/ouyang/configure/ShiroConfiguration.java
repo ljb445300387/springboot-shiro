@@ -32,9 +32,9 @@ import lombok.Data;
  * shiroFilter过滤器中新增拦截
  * */
 @Data
-@Configuration
+/*@Configuration
 @ConfigurationProperties(ignoreUnknownFields = false, prefix = "shiro.login")
-@PropertySource("classpath:config/shiro.properties")
+@PropertySource("classpath:config/shiro.properties")*/
 public class ShiroConfiguration {
 	private Logger log_ = Logger.getLogger(ShiroConfiguration.class.getName());
 
@@ -70,7 +70,7 @@ public class ShiroConfiguration {
         <property name="kickoutUrl" value="/login?kickout=1"/>
 	 * @return
 	 */
-	@Bean(name = "kickoutSessionControlFilter")
+	/*@Bean(name = "kickoutSessionControlFilter")
 	public KickoutSessionControlFilter kickoutSessionControlFilter() {
 		KickoutSessionControlFilter filter = new KickoutSessionControlFilter();
 		filter.setCacheManager(cacheManager);
@@ -78,7 +78,7 @@ public class ShiroConfiguration {
 		filter.setMaxSession(1);
 		
 		return resourceCheckFilter;
-	}
+	}*/
 	
 	@Bean(name = "resourceCheckFilter")
 	public ResourceCheckFilter resourceCheckFilter() {
@@ -91,7 +91,7 @@ public class ShiroConfiguration {
 	public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") DefaultWebSecurityManager securityManager) {
 		log_.info("successUrl:" + successUrl + "\t loginUrl:" + loginUrl + "\t unauthorizedUrl:" + unauthorizedUrl);
 		ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
-		bean.getFilters().put("kickout", value)
+//		bean.getFilters().put("kickout", value)
 		bean.setSecurityManager(securityManager);
 		bean.setSuccessUrl(successUrl);
 		bean.setLoginUrl(loginUrl);

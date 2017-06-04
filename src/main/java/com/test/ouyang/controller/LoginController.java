@@ -1,22 +1,12 @@
 package com.test.ouyang.controller;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.ExcessiveAttemptsException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.session.SessionRepository;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.test.ouyang.service.UserService;
-import com.test.ouyang.vo.SystemUser;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +16,8 @@ public class LoginController {
 
 	@Autowired
 	UserService userService;
+	@Autowired
+	SessionRepository findByIndexNameSessionRepository;
 
 	@RequestMapping("/sayHello")
 	public String sayHello(@RequestParam(value = "name", required = false, defaultValue = "World") String name) {
@@ -38,15 +30,22 @@ public class LoginController {
 		return "index";
 	}
 
-	@RequestMapping("/login")
+	/*@RequestMapping("/login")
 	@ResponseBody
 	public String login(//
-			@RequestParam(value = "username") String username, @RequestParam(value = "password") String password) {
+			@RequestParam(value = "username") String username, //
+			@RequestParam(value = "password") String password) {
+	
 		Subject subject = SecurityUtils.getSubject();
 		String msg = "";
 		if (!username.equals(subject.getPrincipal()) || !subject.isAuthenticated()) {
 			UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 			try {
+				Session session1 = subject.getSession(false);
+				if (session1 != null) {
+					return "不能重复登录";
+				}
+				
 				subject.login(token);
 				Session session = subject.getSession(false);
 				SystemUser user = userService.getUserInfo(username);
@@ -74,7 +73,7 @@ public class LoginController {
 			log.info("msg:" + msg);
 		}
 		return msg;
-	}
+	}*/
 
 	@RequestMapping("/unauthorizedUrl")
 	public String unauthorized() {
@@ -82,13 +81,13 @@ public class LoginController {
 		return "unauthorizedUrl";
 	}
 
-	@RequestMapping("logout")
-	public @ResponseBody String logout() {
-		Subject subject = SecurityUtils.getSubject();
-		subject.logout();
-		log.info("退出成功，已销毁用户信息，需要重新登录");
-		return "/";
-	}
+	/*	@RequestMapping("logout")
+		public @ResponseBody String logout() {
+			Subject subject = SecurityUtils.getSubject();
+			subject.logout();
+			log.info("退出成功，已销毁用户信息，需要重新登录");
+			return "/";
+		}*/
 
 	@RequestMapping("/adminView")
 	public String adminView() {
