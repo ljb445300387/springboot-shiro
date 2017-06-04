@@ -1,14 +1,16 @@
 package com.test.ouyang;
 
+import javax.servlet.ServletContext;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
-import org.springframework.session.web.http.CookieHttpSessionStrategy;
+import org.springframework.session.web.context.AbstractHttpSessionApplicationInitializer;
 import org.springframework.session.web.http.HttpSessionStrategy;
 
 @Configuration
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 180000)
-public class HttpSessionConfig {
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 15)
+public class HttpSessionConfig extends AbstractHttpSessionApplicationInitializer{
 
 	@Bean
 	public HttpSessionStrategy httpSessionStrategy() {
@@ -16,5 +18,10 @@ public class HttpSessionConfig {
 		cookieHttpSessionStrategy.setCookieName("sessionid");
 		return cookieHttpSessionStrategy;
 	}
-	
+
+	@Override
+	protected void beforeSessionRepositoryFilter(ServletContext servletContext) {
+		servletContext.addListener(new MyHttpSessionEventPublisher());;
+	}
+
 }

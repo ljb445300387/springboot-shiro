@@ -9,7 +9,7 @@ import com.test.ouyang.banner.MyBannner;
 
 @EnableAutoConfiguration
 @SpringBootApplication
-@ServletComponentScan(basePackages={"com.test.ouyang.configure"})
+@ServletComponentScan
 public class Application {
 	/**
 	 * 服务启动

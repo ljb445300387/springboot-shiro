@@ -1,4 +1,4 @@
-package com.test.ouyang.configure;
+package com.test.ouyang;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Order(1)
-@WebFilter(filterName = "mySessionFilter", urlPatterns = "/**")
+@WebFilter(filterName = "mySessionFilter", urlPatterns = "/*")
 public class SessionFilter implements Filter {
 
 	@Override
