@@ -1,8 +1,6 @@
 package com.test.ouyang;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.Enumeration;
 
 import javax.servlet.Filter;
@@ -16,11 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
-
 
 import lombok.extern.slf4j.Slf4j;
 
